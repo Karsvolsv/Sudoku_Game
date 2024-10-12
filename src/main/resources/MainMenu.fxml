@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="ethan.sudoku.ControllerSudoku"
+      spacing="10" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f0f0f0;">
+
+    <GridPane fx:id="boardGrid" hgap="5" vgap="5" alignment="CENTER">
+        <!-- Las celdas del Sudoku se agregarán dinámicamente en el controlador -->
+    </GridPane>
+
+    <Button fx:id="helpButton" text="Help" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px 20px;"/>
+</VBox>
+
+
+
+

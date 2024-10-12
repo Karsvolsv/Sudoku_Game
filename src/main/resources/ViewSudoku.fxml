@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane fx:id="boardGrid" xmlns:fx="http://javafx.com/fxml"
+          fx:controller="ethan.sudoku.ControllerSudoku"
+          hgap="5" vgap="5" alignment="CENTER"
+          style="-fx-padding: 20;">
+</GridPane>
+
+

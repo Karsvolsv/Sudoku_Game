@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="ethan.sudoku.ControllerSudoku"
-      spacing="10" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f0f0f0;">
+<GridPane alignment="CENTER" hgap="10" prefHeight="600.0" prefWidth="600.0" style="-fx-padding: 20;" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/22" fx:controller="ethan.sudoku.MainMenuController">
+   <ImageView fitHeight="485.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@img_fondo.png" />
+      </image>
+   </ImageView>
 
-    <GridPane fx:id="boardGrid" hgap="5" vgap="5" alignment="CENTER">
-        <!-- Las celdas del Sudoku se agregarán dinámicamente en el controlador -->
-    </GridPane>
-
-    <Button fx:id="helpButton" text="Help" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10px 20px;"/>
-</VBox>
-
-
-
-
+    <HBox alignment="CENTER" spacing="10">
+        <Button fx:id="playButton" style="-fx-background-color: lightgray; -fx-text-fill: black; -fx-font-size: 16px; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;" text="Jugar" />
+        <Button fx:id="instructionsButton" style="-fx-background-color: lightgray; -fx-text-fill: black; -fx-font-size: 16px; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;" text="Instrucciones" />
+        <Button fx:id="exitButton" style="-fx-background-color: lightgray; -fx-text-fill: black; -fx-font-size: 16px; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;" text="Salir" />
+    </HBox>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

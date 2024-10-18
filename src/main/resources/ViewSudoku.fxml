@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
 
-<GridPane fx:id="boardGrid" xmlns:fx="http://javafx.com/fxml"
-          fx:controller="ethan.sudoku.ControllerSudoku"
-          hgap="5" vgap="5" alignment="CENTER"
-          style="-fx-padding: 20;">
-</GridPane>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="ethan.sudoku.ControllerSudoku"
+      spacing="10" alignment="CENTER" style="-fx-padding: 20; -fx-background-color: #f0f0f0;">
+
+    <GridPane fx:id="boardGrid" hgap="5" vgap="5" alignment="CENTER"
+              prefWidth="600" prefHeight="600" minWidth="600" minHeight="600">
+    </GridPane>
+    <Label fx:id="lastNumberLabel" text="Último número: " />
+    <Button fx:id="helpButton" text="Help" onAction="#handleHelpButton" style="-fx-background-color: lightgray; -fx-text-fill: black; -fx-font-size: 16px; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+</VBox>
+
+
+
+
 
 

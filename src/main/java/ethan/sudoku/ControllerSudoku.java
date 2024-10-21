@@ -25,16 +25,29 @@ public class ControllerSudoku {
     @FXML
     private Button newGameButton; // Botón para nuevo juego
 
+    /**
+     * Inicializa el controlador.
+     * Configuraciones iniciales si es necesario.
+     */
     @FXML
     public void initialize() {
         // Configuraciones iniciales si es necesario.
     }
 
+    /**
+     * Establece el modelo del juego.
+     *
+     * @param model El modelo del juego a establecer.
+     */
     public void setModel(ModelSudoku model) {
         this.model = model;
         initializeBoard();
     }
 
+    /**
+     * Inicializa el tablero de Sudoku en la interfaz gráfica.
+     * Crea las celdas del tablero y establece su estilo y comportamiento.
+     */
     private void initializeBoard() {
         boardGrid.getChildren().clear();
         int[][] board = model.getBoard();
@@ -59,6 +72,13 @@ public class ControllerSudoku {
         }
     }
 
+    /**
+     * Obtiene el estilo de la celda según su posición en el tablero.
+     *
+     * @param row Fila de la celda.
+     * @param col Columna de la celda.
+     * @return El estilo CSS de la celda.
+     */
     private String getCellStyle(int row, int col) {
         boolean isInGrayBlock = ((row / 2) + (col / 3)) % 2 == 0;
         return "-fx-font-size: 18; -fx-alignment: CENTER; " +
@@ -66,6 +86,14 @@ public class ControllerSudoku {
                 (isInGrayBlock ? "-fx-background-color: #d3d3d3;" : "-fx-background-color: #fff;");
     }
 
+    /**
+     * Valida la entrada del usuario en una celda.
+     *
+     * @param row  Fila de la celda.
+     * @param col  Columna de la celda.
+     * @param cell La celda de texto a validar.
+     * @return Un EventHandler para manejar el evento de liberación de teclas.
+     */
     private javafx.event.EventHandler<KeyEvent> validateInputEvent(int row, int col, TextField cell) {
         return e -> {
             String text = cell.getText();
@@ -92,14 +120,30 @@ public class ControllerSudoku {
         };
     }
 
+    /**
+     * Resalta un error en la celda.
+     *
+     * @param cell La celda que contiene el error.
+     */
     private void highlightError(TextField cell) {
         cell.setStyle(cell.getStyle() + " -fx-border-color: red; -fx-border-width: 2;");
     }
 
+    /**
+     * Restablece el estilo de la celda a su valor predeterminado.
+     *
+     * @param cell La celda a restablecer.
+     * @param row  Fila de la celda.
+     * @param col  Columna de la celda.
+     */
     private void resetCellStyle(TextField cell, int row, int col) {
         cell.setStyle(getCellStyle(row, col));
     }
 
+    /**
+     * Maneja el evento del botón de ayuda.
+     * Revela un número de una celda vacía en el tablero.
+     */
     @FXML
     private void handleHelpButton() {
         Random random = new Random();
@@ -123,8 +167,11 @@ public class ControllerSudoku {
         cell.setDisable(true); // Deshabilitar la celda para que no pueda ser editada
     }
 
-
-
+    /**
+     * Muestra un mensaje de error en un cuadro de diálogo.
+     *
+     * @param message El mensaje de error a mostrar.
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
@@ -133,6 +180,11 @@ public class ControllerSudoku {
         alert.showAndWait();
     }
 
+    /**
+     * Cambia el tablero actual.
+     *
+     * @param index El índice del nuevo tablero.
+     */
     @FXML
     private void changeBoard(int index) {
         try {
@@ -143,6 +195,10 @@ public class ControllerSudoku {
         }
     }
 
+    /**
+     * Maneja el evento del botón para iniciar un nuevo juego.
+     * Reinicia los tableros y el estado del juego.
+     */
     @FXML
     private void handleNewGameButton() {
         model.initializeBoards(); // Reinicia los tableros

@@ -10,6 +10,10 @@ public class ModelSudoku {
     private int currentBoardIndex; // Índice del tablero actual
     private boolean[][] initialCells; // Indica qué celdas son editables
 
+    /**
+     * Constructor que inicializa los tableros de Sudoku.
+     * Inicializa tres tableros diferentes y establece el índice del tablero actual en 0.
+     */
     public ModelSudoku() {
         // Inicializa los tableros (puedes agregar más tableros)
         boards = new int[3][6][6]; // Suponiendo que tienes 3 tableros diferentes
@@ -18,6 +22,9 @@ public class ModelSudoku {
         initializeBoards();
     }
 
+    /**
+     * Inicializa los tableros asegurando que hay exactamente 2 números en cada bloque 2x3.
+     */
     public void initializeBoards() {
         Random rand = new Random();
 
@@ -32,93 +39,105 @@ public class ModelSudoku {
             }
 
             // Coloca 2 números aleatorios en cada bloque 2x3
-            for (int blockRow = 0; blockRow < 3; blockRow++) { // Hay 3 bloques de 2 filas
-                for (int blockCol = 0; blockCol < 2; blockCol++) { // Hay 2 bloques de 3 columnas
-                    // Almacena los números que se colocarán en el bloque
-                    int[] numbers = new int[2];
-                    numbers[0] = rand.nextInt(6) + 1; // Elige un número aleatorio (del 1 al 6)
-                    do {
-                        numbers[1] = rand.nextInt(6) + 1; // Elige otro número aleatorio
-                    } while (numbers[0] == numbers[1]); // Asegúrate de que sean diferentes
-
-                    // Coloca los números en posiciones aleatorias dentro del bloque 2x3
-                    for (int j = 0; j < 2; j++) {
-                        int row, col;
-                        do {
-                            row = blockRow * 2 + rand.nextInt(2); // Selecciona fila aleatoria dentro del bloque
-                            col = blockCol * 3 + rand.nextInt(3); // Selecciona columna aleatoria dentro del bloque
-                        } while (boards[i][row][col] != 0); // Asegúrate de que la celda esté vacía
-
-                        boards[i][row][col] = numbers[j]; // Coloca el número
-                        initialCells[row][col] = true; // Marca la celda como no editable
+            for (int blockRow = 0; blockRow < 3; blockRow++) {
+                for (int blockCol = 0; blockCol < 2; blockCol++) {
+                    int count = 0;
+                    while (count < 2) {
+                        int row = blockRow * 2 + rand.nextInt(2);
+                        int col = blockCol * 3 + rand.nextInt(3);
+                        if (boards[i][row][col] == 0) { // Si la celda está vacía
+                            boards[i][row][col] = rand.nextInt(6) + 1; // Coloca un número aleatorio del 1 al 6
+                            initialCells[row][col] = true; // Marca como no editable
+                            count++;
+                        }
                     }
                 }
             }
         }
     }
 
+    /**
+     * Obtiene el tablero actual.
+     *
+     * @return El tablero actual como una matriz 6x6.
+     */
     public int[][] getBoard() {
-        return boards[currentBoardIndex]; // Retorna el tablero actual
+        return boards[currentBoardIndex];
     }
 
+    /**
+     * Obtiene las celdas iniciales del tablero actual.
+     *
+     * @return Una matriz booleana que indica qué celdas son editables.
+     */
     public boolean[][] getInitialCells() {
-        return initialCells; // Devuelve las celdas editables
+        return initialCells;
     }
 
+    /**
+     * Establece un valor en la celda especificada del tablero actual.
+     *
+     * @param row   Fila de la celda.
+     * @param col   Columna de la celda.
+     * @param value Valor a establecer en la celda.
+     */
     public void setValue(int row, int col, int value) {
-        boards[currentBoardIndex][row][col] = value; // Establece el valor en la celda
+        boards[currentBoardIndex][row][col] = value;
     }
 
+    /**
+     * Verifica si el valor es válido en la posición especificada.
+     *
+     * @param row   Fila de la celda.
+     * @param col   Columna de la celda.
+     * @param value Valor a verificar.
+     * @return Verdadero si el valor es válido, falso en caso contrario.
+     */
     public boolean isValueValid(int row, int col, int value) {
-        // Lógica para validar si el valor es válido
-        // Verifica si el valor ya está en la fila, columna o bloque
-
-        // Verificar filas y columnas
-        for (int i = 0; i < 6; i++) {
-            if (boards[currentBoardIndex][row][i] == value || boards[currentBoardIndex][i][col] == value) {
-                return false;
+        // Verificar fila
+        for (int c = 0; c < 6; c++) {
+            if (c != col && boards[currentBoardIndex][row][c] == value) {
+                return false; // Repetido en la fila
             }
         }
-
-        // Verifica el bloque 2x3 correspondiente
-        int blockRowStart = (row / 2) * 2;
-        int blockColStart = (col / 3) * 3;
-        int count = 0;
-
-        for (int r = blockRowStart; r < blockRowStart + 2; r++) {
-            for (int c = blockColStart; c < blockColStart + 3; c++) {
-                if (boards[currentBoardIndex][r][c] == value) {
-                    count++;
+        // Verificar columna
+        for (int r = 0; r < 6; r++) {
+            if (r != row && boards[currentBoardIndex][r][col] == value) {
+                return false; // Repetido en la columna
+            }
+        }
+        // Verificar bloque 2x3
+        int blockRow = row / 2;
+        int blockCol = col / 3;
+        for (int r = blockRow * 2; r < blockRow * 2 + 2; r++) {
+            for (int c = blockCol * 3; c < blockCol * 3 + 3; c++) {
+                if ((r != row || c != col) && boards[currentBoardIndex][r][c] == value) {
+                    return false; // Repetido en el bloque
                 }
             }
         }
-
-        // Solo se permiten 2 números del mismo tipo en el bloque 2x3
-        if (count >= 2) {
-            return false;
-        }
-
         return true; // El valor es válido
     }
 
-    public void setCurrentBoardIndex(int index) {
-        if (index >= 0 && index < boards.length) {
-            currentBoardIndex = index; // Cambia el índice del tablero actual
-        } else {
-            throw new IndexOutOfBoundsException("Índice de tablero fuera de rango.");
-        }
+    /**
+     * Obtiene la solución del tablero actual.
+     *
+     * @return El tablero de solución.
+     */
+    public int[][] getSolution() {
+        // Implementar la lógica para obtener la solución si es necesario.
+        return boards[currentBoardIndex]; // Esto debe ser reemplazado con el tablero de solución real.
     }
 
-    public int[][] getSolution() {
-        // Método para obtener la solución del tablero actual (si se implementa)
-        return boards[currentBoardIndex]; // Aquí puedes devolver la solución real
+    /**
+     * Establece el índice del tablero actual.
+     *
+     * @param index El índice del nuevo tablero.
+     */
+    public void setCurrentBoardIndex(int index) {
+        this.currentBoardIndex = index;
     }
 }
-
-
-
-
-
 
 
 

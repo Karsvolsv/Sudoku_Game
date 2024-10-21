@@ -3,207 +3,129 @@ package ethan.sudoku;
 import java.util.Random;
 
 /**
- * Modelo de datos para el juego de Sudoku.
- * Maneja el tablero, las celdas iniciales y la lógica del juego.
+ * Modelo del Sudoku que maneja la lógica del juego.
  */
 public class ModelSudoku {
-    private final int[][] board; // Tablero de Sudoku
-    private final boolean[][] initialCells; // Celdas que son iniciales
-    private final MovimientoStack movimientos; // Pila para deshacer movimientos
-    private ControllerSudoku controller; // Controlador del juego
+    private int[][][] boards; // Matriz de tableros, cada tablero es una matriz 6x6
+    private int currentBoardIndex; // Índice del tablero actual
+    private boolean[][] initialCells; // Indica qué celdas son editables
 
-    /**
-     * Constructor que inicializa el tablero y las celdas iniciales.
-     */
     public ModelSudoku() {
-        board = new int[6][6];
-        initialCells = new boolean[6][6];
-        movimientos = new MovimientoStack(100);
-        initializeBoard();
+        // Inicializa los tableros (puedes agregar más tableros)
+        boards = new int[3][6][6]; // Suponiendo que tienes 3 tableros diferentes
+        initialCells = new boolean[6][6]; // Inicializa las celdas editables
+        currentBoardIndex = 0; // Comienza con el primer tablero
+        initializeBoards();
     }
 
-    /**
-     * Inicializa el tablero con un número aleatorio de celdas iniciales.
-     */
-    private void initializeBoard() {
-        Random random = new Random();
-        int numberOfInitialCells = 5; // Cambia este número según tus necesidades
+    public void initializeBoards() {
+        Random rand = new Random();
 
-        int count = 0;
-        while (count < numberOfInitialCells) {
-            int row = random.nextInt(6);
-            int column = random.nextInt(6);
+        // Inicializa cada tablero asegurando que hay exactamente 2 números en cada bloque 2x3
+        for (int i = 0; i < boards.length; i++) {
+            // Llena el tablero con ceros (celdas vacías)
+            for (int row = 0; row < 6; row++) {
+                for (int col = 0; col < 6; col++) {
+                    boards[i][row][col] = 0; // Celdas vacías
+                    initialCells[row][col] = false; // Marca las celdas como editables
+                }
+            }
 
-            // Solo llenar celdas que estén vacías
-            if (board[row][column] == 0) {
-                int randomValue = random.nextInt(6) + 1; // Número aleatorio del 1 al 6
-                board[row][column] = randomValue; // Establecer el valor en el tablero
-                initialCells[row][column] = true; // Marcar la celda como inicial
-                count++; // Incrementar el contador de celdas iniciales
+            // Coloca 2 números aleatorios en cada bloque 2x3
+            for (int blockRow = 0; blockRow < 3; blockRow++) { // Hay 3 bloques de 2 filas
+                for (int blockCol = 0; blockCol < 2; blockCol++) { // Hay 2 bloques de 3 columnas
+                    // Almacena los números que se colocarán en el bloque
+                    int[] numbers = new int[2];
+                    numbers[0] = rand.nextInt(6) + 1; // Elige un número aleatorio (del 1 al 6)
+                    do {
+                        numbers[1] = rand.nextInt(6) + 1; // Elige otro número aleatorio
+                    } while (numbers[0] == numbers[1]); // Asegúrate de que sean diferentes
+
+                    // Coloca los números en posiciones aleatorias dentro del bloque 2x3
+                    for (int j = 0; j < 2; j++) {
+                        int row, col;
+                        do {
+                            row = blockRow * 2 + rand.nextInt(2); // Selecciona fila aleatoria dentro del bloque
+                            col = blockCol * 3 + rand.nextInt(3); // Selecciona columna aleatoria dentro del bloque
+                        } while (boards[i][row][col] != 0); // Asegúrate de que la celda esté vacía
+
+                        boards[i][row][col] = numbers[j]; // Coloca el número
+                        initialCells[row][col] = true; // Marca la celda como no editable
+                    }
+                }
             }
         }
     }
 
-    /**
-     * Establece el controlador para interactuar con la vista.
-     *
-     * @param controller Controlador del Sudoku
-     */
-    public void setController(ControllerSudoku controller) {
-        this.controller = controller;
-    }
-
-    /**
-     * Obtiene el tablero actual de Sudoku.
-     *
-     * @return Tablero de Sudoku
-     */
     public int[][] getBoard() {
-        return board;
+        return boards[currentBoardIndex]; // Retorna el tablero actual
     }
 
-    /**
-     * Obtiene las celdas iniciales del tablero.
-     *
-     * @return Matriz de celdas iniciales
-     */
     public boolean[][] getInitialCells() {
-        return initialCells;
+        return initialCells; // Devuelve las celdas editables
     }
 
-    /**
-     * Verifica si una celda es editable.
-     *
-     * @param row Fila de la celda
-     * @param column Columna de la celda
-     * @return true si la celda es editable, false en caso contrario
-     */
-    public boolean isEditable(int row, int column) {
-        return !initialCells[row][column];
+    public void setValue(int row, int col, int value) {
+        boards[currentBoardIndex][row][col] = value; // Establece el valor en la celda
     }
 
-    /**
-     * Establece un valor en una celda del tablero.
-     *
-     * @param row Fila de la celda
-     * @param column Columna de la celda
-     * @param value Valor a establecer
-     * @return true si se pudo establecer el valor y se completó el tablero, false en caso contrario
-     */
-    public boolean setValue(int row, int column, int value) {
-        if (isEditable(row, column) && isValueValid(row, column, value)) {
-            board[row][column] = value;
-            movimientos.push(new int[]{row, column, value});
+    public boolean isValueValid(int row, int col, int value) {
+        // Lógica para validar si el valor es válido
+        // Verifica si el valor ya está en la fila, columna o bloque
 
-            if (isBoardComplete()) {
-                controller.showCompletionMessage();
-                return true;
+        // Verificar filas y columnas
+        for (int i = 0; i < 6; i++) {
+            if (boards[currentBoardIndex][row][i] == value || boards[currentBoardIndex][i][col] == value) {
+                return false;
             }
         }
-        return false;
-    }
 
-    /**
-     * Elimina el valor de una celda del tablero.
-     *
-     * @param row Fila de la celda
-     * @param column Columna de la celda
-     */
-    public void clearValue(int row, int column) {
-        if (isEditable(row, column)) {
-            board[row][column] = 0; // Eliminar el valor completamente
-        }
-    }
+        // Verifica el bloque 2x3 correspondiente
+        int blockRowStart = (row / 2) * 2;
+        int blockColStart = (col / 3) * 3;
+        int count = 0;
 
-    /**
-     * Verifica si un valor es válido para una celda específica.
-     *
-     * @param row Fila de la celda
-     * @param column Columna de la celda
-     * @param value Valor a validar
-     * @return true si el valor es válido, false en caso contrario
-     */
-    public boolean isValueValid(int row, int column, int value) {
-        int startRow = (row / 2) * 2;
-        int startColumn = (column / 3) * 3;
-
-        // Verificar duplicados en el bloque 2x3
-        for (int i = startRow; i < startRow + 2; i++) {
-            for (int j = startColumn; j < startColumn + 3; j++) {
-                if (board[i][j] == value && !(i == row && j == column)) {
-                    return false; // No permitir el mismo número en el mismo bloque
+        for (int r = blockRowStart; r < blockRowStart + 2; r++) {
+            for (int c = blockColStart; c < blockColStart + 3; c++) {
+                if (boards[currentBoardIndex][r][c] == value) {
+                    count++;
                 }
             }
         }
-        return true;
+
+        // Solo se permiten 2 números del mismo tipo en el bloque 2x3
+        if (count >= 2) {
+            return false;
+        }
+
+        return true; // El valor es válido
     }
 
-    /**
-     * Verifica si el tablero está completo.
-     *
-     * @return true si el tablero está completo, false en caso contrario
-     */
-    public boolean isBoardComplete() {
-        for (int row = 0; row < 6; row++) {
-            for (int column = 0; column < 6; column++) {
-                if (board[row][column] == 0) {
-                    return false; // Hay al menos una celda vacía
-                }
-            }
+    public void setCurrentBoardIndex(int index) {
+        if (index >= 0 && index < boards.length) {
+            currentBoardIndex = index; // Cambia el índice del tablero actual
+        } else {
+            throw new IndexOutOfBoundsException("Índice de tablero fuera de rango.");
         }
-        return true; // Todas las celdas están llenas
     }
 
-    /**
-     * Clase interna que representa una pila para manejar los movimientos.
-     */
-    private class MovimientoStack {
-        private final int[][] stack; // Pila para almacenar movimientos
-        private int top; // Índice de la parte superior de la pila
-
-        /**
-         * Constructor que inicializa la pila con la capacidad dada.
-         *
-         * @param capacity Capacidad máxima de la pila
-         */
-        public MovimientoStack(int capacity) {
-            stack = new int[capacity][3];
-            top = -1;
-        }
-
-        /**
-         * Agrega un movimiento a la pila.
-         *
-         * @param movimiento Movimiento a agregar
-         */
-        public void push(int[] movimiento) {
-            if (top < stack.length - 1) {
-                stack[++top] = movimiento;
-            }
-        }
-
-        /**
-         * Elimina y retorna el último movimiento de la pila.
-         *
-         * @return Último movimiento o null si la pila está vacía
-         */
-        public int[] pop() {
-            if (top >= 0) {
-                return stack[top--];
-            }
-            return null;
-        }
-
-        /**
-         * Verifica si la pila está vacía.
-         *
-         * @return true si la pila está vacía, false en caso contrario
-         */
-        public boolean isEmpty() {
-            return top == -1;
-        }
+    public int[][] getSolution() {
+        // Método para obtener la solución del tablero actual (si se implementa)
+        return boards[currentBoardIndex]; // Aquí puedes devolver la solución real
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

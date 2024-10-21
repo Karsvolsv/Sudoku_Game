@@ -5,14 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="097c87ee-74b8-4dbb-a9f3-0083af726d43" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ethan/sudoku/ControllerSudoku.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ethan/sudoku/ControllerSudoku.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ethan/sudoku/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ethan/sudoku/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ethan/sudoku/MainMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ethan/sudoku/MainMenuController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ethan/sudoku/ModelSudoku.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ethan/sudoku/ModelSudoku.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/MainMenu.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/ViewSudoku.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ViewSudoku.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,8 +83,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
-        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.227" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.227" />
       </set>
     </attachedChunks>
   </component>
@@ -103,6 +99,7 @@
       <workItem from="1728677765177" duration="2057000" />
       <workItem from="1728756150267" duration="5782000" />
       <workItem from="1729211523900" duration="11708000" />
+      <workItem from="1729480775814" duration="4739000" />
     </task>
     <servers />
   </component>

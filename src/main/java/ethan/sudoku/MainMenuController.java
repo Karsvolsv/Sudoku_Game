@@ -5,89 +5,64 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button; // Importa la clase Button
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 /**
  * Controlador del menú principal de la aplicación Sudoku.
- * Maneja las interacciones del usuario con los botones del menú.
+ * Gestiona las acciones de los botones del menú.
  */
 public class MainMenuController {
 
     @FXML
-    private Button playButton;
-    @FXML
-    private Button instructionsButton;
-    @FXML
-    private Button exitButton;
+    private Button playButton, instructionsButton, exitButton;
 
     /**
-     * Inicializa el controlador y asigna las acciones a los botones.
+     * Inicializa las acciones de los botones del menú principal.
      */
     @FXML
     public void initialize() {
-        playButton.setOnAction(event -> startGame());
-        instructionsButton.setOnAction(event -> showInstructions());
-        exitButton.setOnAction(event -> exitApplication());
+        playButton.setOnAction(e -> switchToGame());
+        instructionsButton.setOnAction(e -> showAlert("Instrucciones del Juego",
+                "Cómo jugar Sudoku",
+                "Completa una cuadrícula 6x6 con números del 1 al 6 sin repetir en filas, columnas y bloques 2x3."));
+        exitButton.setOnAction(e -> System.exit(0));
     }
 
     /**
-     * Inicia el juego al cambiar a la vista del tablero de Sudoku.
-     * Crea un nuevo modelo de Sudoku y lo establece en el controlador correspondiente.
+     * Cambia a la vista del tablero de Sudoku.
+     * Crea un modelo de Sudoku y lo establece en el controlador.
      */
-    private void startGame() {
+    private void switchToGame() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ViewSudoku.fxml"));
             Parent root = loader.load();
-
-            // Obtener el controlador y establecer el modelo
             ControllerSudoku controller = loader.getController();
-            ModelSudoku model = new ModelSudoku();
-            controller.setModel(model);
-            model.setController(controller);
+            controller.setModel(new ModelSudoku());
 
-            // Cambiar a la nueva escena
             Stage stage = (Stage) playButton.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Sudoku Game");
             stage.show();
         } catch (IOException e) {
-            showError("Error al iniciar el juego. Intente nuevamente.");
+            showAlert("Error", "Error al iniciar el juego", "Intente nuevamente.");
             e.printStackTrace();
         }
     }
 
     /**
-     * Muestra un cuadro de diálogo con las instrucciones del juego.
-     */
-    private void showInstructions() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Instrucciones del Juego");
-        alert.setHeaderText("Cómo jugar Sudoku");
-        alert.setContentText("Debes completar una cuadrícula de 6x6 con números del 1 al 6, de manera que cada fila," +
-                             "columna y bloque de 2x3 contenga todos los números sin repetir");
-        alert.showAndWait();
-    }
-
-    /**
-     * Cierra la aplicación.
-     */
-    private void exitApplication() {
-        System.exit(0);
-    }
-
-    /**
-     * Muestra un mensaje de error.
+     * Muestra una alerta con el mensaje proporcionado.
      *
-     * @param message Mensaje de error a mostrar.
+     * @param title   Título de la alerta.
+     * @param header  Encabezado de la alerta.
+     * @param content Contenido del mensaje.
      */
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText("Ha ocurrido un error");
-        alert.setContentText(message);
+    private void showAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }

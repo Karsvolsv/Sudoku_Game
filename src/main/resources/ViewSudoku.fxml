@@ -11,6 +11,7 @@
               prefWidth="600" prefHeight="600" minWidth="600" minHeight="600">
     </GridPane>
     <Label fx:id="lastNumberLabel" text="Último número: " />
+    <Button fx:id="newGameButton" text="Nuevo Juego" onAction="#handleNewGameButton"/>
     <Button fx:id="helpButton" text="Help" onAction="#handleHelpButton" style="-fx-background-color: lightgray; -fx-text-fill: black; -fx-font-size: 16px; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;"/>
 </VBox>
 
